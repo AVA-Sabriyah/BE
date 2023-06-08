@@ -1,0 +1,37 @@
+trigger:
+  branches:
+    include:
+      - master
+
+jobs:
+  - job: Build
+    displayName: 'Build Job'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - script: echo Building...
+
+  - job: Test
+    displayName: 'Test Job'
+    dependsOn: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - script: echo Testing...
+
+  - job: Deploy
+    displayName: 'Deploy Job'
+    dependsOn: Test
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - script: echo Deploying...
+
+# Configure notifications
+notifications:
+  webhooks:
+    - name: WebhookNotification
+      displayName: 'Send Teams Notification'
+      url: https://teams.microsoft.com/l/app/203a1e2c-26cc-47ca-83ae-be98f960b6b2?source=app-details-dialog
+      condition: succeededOrFailed()
+      continueOnError: true
